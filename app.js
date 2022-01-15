@@ -11,6 +11,10 @@
 require("dotenv").config();
 
  var express = require('express'); // Express web server framework
+ var router = express.Router();
+ var spotifyController = require('../spotifyController')
+
+
  var request = require('request'); // "Request" library
  var cors = require('cors');
  var querystring = require('querystring');
