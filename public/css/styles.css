@@ -11,26 +11,26 @@ body {
 }
 
 .centered {
-  padding-top: 150px;
+  padding-top: 100px;
   text-align: center;
 }
 
-.dot {
-  width: 184px;
-  height: 184px;
+.logo {
   margin: auto;
-  margin-bottom: 25px;
-  background-color: #878686;
+  margin-top: 50px;
+  margin-bottom: 50px;
   border-radius: 50%;
   display: block;
+  filter: drop-shadow(0px 10px 35px rgba(45, 9, 73, 0.6));
 }
 
 .display-4 {
   font-family: "Roboto", sans-serif;
+  font-weight: 900;
   color: #5e34a3;
 }
 
-.btn-success {
+.btn-light {
   font-family: "Manrope", sans-serif;
   font-weight: 700;
   padding-top: 2%;
@@ -56,9 +56,10 @@ body {
   color: #3a3393;
 }
 
-.item {
+.panel {
   margin-bottom: 20px;
 }
+
 .card {
   height: 215px;
   width: 289px;
@@ -69,6 +70,15 @@ body {
 .card-body {
   display: flex;
   text-align: left;
+}
+
+.categories .row {
+  justify-content: center;
+}
+
+a {
+  color: inherit;
+  text-decoration: none !important;
 }
 
 .card-title {
@@ -85,9 +95,19 @@ body {
   background-color: #e8d3f8;
 }
 
+.category-1:hover {
+  color:#E8D3F8;
+  background-color: #3A3393;
+}
+
 .category-2 {
   color: #e14574;
   background-color: #fff3c9;
+}
+
+.category-2:hover {
+  color: #FFF7DC;
+  background-color: #FFB1C9;
 }
 
 .category-3 {
@@ -95,9 +115,19 @@ body {
   background-color: #aafae6;
 }
 
+.category-3:hover {
+  color: #AAFAE6;
+  background-color: #533DDB;
+}
+
 .category-4 {
   color: #ed5616;
   background-color: #c5f2a9;
+}
+
+.category-4:hover {
+  background-color: #ed5616;
+  color: #c5f2a9;
 }
 
 .category-5 {
@@ -105,7 +135,100 @@ body {
   background-color: #45439d;
 }
 
+.category-5:hover {
+  background-color: #ffe485;
+ color: #45439d;
+}
+
 .category-6 {
   color: #e96060;
   background-color: #9ecefb;
+}
+
+.category-6:hover {
+  background-color: #e96060;
+  color: #9ecefb;
+}
+
+/* PLAYLIST */
+.playlist-body {
+  background-image: url("/public/images/PainRelief.svg");
+  width: 100vw;
+  min-height: 100vh;
+  padding: 0 25%;
+}
+
+.playlist-header h3 {
+  font-family: "Work Sans", sans-serif;
+  font-weight: 700;
+  font-size: 60px;
+  margin: auto;
+  text-align: center;
+  color: #3a3393;
+  padding-top: 10%;
+}
+
+.playlist-header h4 {
+  font-family: "Work Sans", sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  text-align: left;
+  color: #3a3393;
+  margin-left: -15px;
+  padding-top: 7.5%;
+  padding-bottom: 2.5%;
+}
+
+.view-group {
+  padding-bottom: 20%;
+}
+
+.list-group {
+  margin: auto;
+  width: 100%;
+}
+
+.list-group p {
+  margin: 0;
+}
+
+.list-group-item {
+  margin-bottom: 25px;
+  border-radius: 10px !important;
+  border-color: #fff !important;
+  margin-left: 0;
+
+  max-width: fill-available;
+  max-width: stretch;
+  max-width: -webkit-fill-available;
+  max-width: -moz-available;
+}
+
+.list-group-item i {
+  display: inline-block;
+  padding-right: 20px;
+}
+
+.list-group-item .song-info {
+  display: inline-block;
+}
+
+.song-info span {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #3A3393;
+}
+
+.song-info p {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.list-group-item .time {
+  float: right;
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
 }
