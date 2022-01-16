@@ -31,7 +31,7 @@ app.get("/", function (req, res) {
   res.render("home");
 });
 
-app.get("/categories", function (req, res) {
+app.get("/categories", async (req, res) => {
   var categories = [
     {
       title: "Pain Relief",
@@ -61,6 +61,9 @@ app.get("/categories", function (req, res) {
   res.render("categories", {
     categories: categories,
   });
+  var userId = await getUserId(); // returns userId, string
+  var playlists = await findPlaylists(userId);
+  console.log(playlists.body['items']);
 });
 
 // Instantiate Spotify Web API
@@ -70,7 +73,7 @@ var spotifyApi = new SpotifyWebApi({
   redirectUri: redirect_uri,
 });
 
-/* authentication */
+// Authentication
 app.get("/login", function (req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -85,11 +88,7 @@ app.get("/callback", async (req, res) => {
     console.log("code isi null");
   }
   try {
-    console.log(`Code: ${code}`);
     var data = await spotifyApi.authorizationCodeGrant(code);
-    console.log("The token expires in " + data.body["expires_in"]);
-    console.log("The access token is " + data.body["access_token"]);
-    console.log("The refresh token is " + data.body["refresh_token"]);
     var access_token = data.body["access_token"];
   } catch (err) {
     console.log("something went wrong :PP");
@@ -98,16 +97,52 @@ app.get("/callback", async (req, res) => {
   res.redirect("/categories");
 });
 
-/* get made for you playlists */
+// Find user's top artists
+async function findTopArtists(userId, genre) {
+  try {
+    var topArtists = await spotifyApi.getMyTopArtists();
+    topArtistsRefined = topArtists.body['items'];
+  }
+  catch {
+    console.log("something went wrong with getting top artists :PP");
+  }
+}
 
-/* find songs under made for you playlists under same genre 
-(up until some max number) */
+// Find song recommendations
+async function findTracks(topArtists, genres) {
+  try {
+    var tracks = spotifyApi.getRecommendations({
+      seed_artists: topArtists,
+      seed_genres: genres,
+      limit: 10
+    });
+    return tracks;
+  } catch {
+    console.log("something went wrong with finding tracks for the playlist :PP");
+  }
+}
 
-/* add songs to playlist */
+// Create a new playlist
+async function createPlaylist(title, description) {
+  try {
+    var newPlaylist = await spotifyApi.createPlaylist(title, { 'description': description, 'public': true }, { position : 0 });
+    return newPlaylist;
+  }
+  catch {
+    console.log("something went wrong with creating the playlist :PP");
+  }
+}
 
-/* return playlist */
+async function addToPlaylist(playlistId, tracks) {
+  try {
+    await spotifyApi.addTracksToPlaylist(playlistId, tracks);
+    console.log('Added tracks to playlist');
+  } catch {
+    console.log("something went wrong with adding songs to the playlist :PP");
+  }
+}
 
-/* helper functions */
+// Helper functions
 var generateRandomString = function (length) {
   var text = "";
   var possible =
@@ -118,6 +153,15 @@ var generateRandomString = function (length) {
   }
   return text;
 };
+
+async function getUserId() {
+  try {
+    var data = await spotifyApi.getMe();
+    return data.body['id'];
+  } catch (err) {
+    console.log("something went wrong with fetching user data :PP");
+  }
+}
 
 console.log(`Listening on ${PORT}`);
 app.listen(PORT);
