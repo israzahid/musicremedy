@@ -18,12 +18,11 @@ var app = express();
 
 app.use(express.static(__dirname + '/public'))
    .use(cors())
-   .use(cookieParser());
-
+   .use(cookieParser())
+   .use(bodyParser.urlencoded({
+    extended: true
+    }));
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({
-extended: true
-}));
 
 app.get("/", function(req, res) {
   res.render("home");
@@ -93,6 +92,7 @@ app.get('/callback', async (req, res) => {
       console.log('something went wrong :PP');
   }
   spotifyApi.setAccessToken(access_token);
+  res.redirect("/categories");
 });
 
 /* get made for you playlists */
