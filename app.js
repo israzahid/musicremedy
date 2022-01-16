@@ -1,5 +1,4 @@
-/* configure access to our .env */
-require("dotenv").config(); // might be able to take this out
+require("dotenv").config(); // configure access to our .env 
 
 var express = require('express'); // Express web server framework
 var cors = require('cors');
