@@ -37,6 +37,11 @@ body {
   padding-bottom: 2%;
 }
 
+.btn-light:hover {
+  background-color: #3FAE3C;
+  color: white;
+}
+
 /* CATEGORIES */
 
 .category-body {
