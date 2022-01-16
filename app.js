@@ -61,9 +61,16 @@ app.get("/categories", async (req, res) => {
   res.render("categories", {
     categories: categories,
   });
-  var userId = await getUserId(); // returns userId, string
-  var playlists = await findPlaylists(userId);
-  console.log(playlists.body['items']);
+  // var userId = await getUserId(); // returns userId, string
+  // let topTracks = await findTopTracks();
+  var topTracks = 
+      ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb']
+    ;
+  var genres = [
+      'indie pop', 'indie poptimism', 'easy listening'
+    ];
+  var genTracks = await findTracks(topTracks, genres); 
+  console.log(genTracks);
 });
 
 // Instantiate Spotify Web API
@@ -78,7 +85,6 @@ app.get("/login", function (req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
   var authorizationURL = spotifyApi.createAuthorizeURL(scope, state);
-  console.log(authorizationURL);
   res.redirect(authorizationURL);
 });
 
@@ -90,6 +96,7 @@ app.get("/callback", async (req, res) => {
   try {
     var data = await spotifyApi.authorizationCodeGrant(code);
     var access_token = data.body["access_token"];
+    console.log('Authenticated');
   } catch (err) {
     console.log("something went wrong :PP");
   }
@@ -97,27 +104,42 @@ app.get("/callback", async (req, res) => {
   res.redirect("/categories");
 });
 
-// Find user's top artists
-async function findTopArtists(userId, genre) {
+// Find user's top tracks, return a list of song IDs
+async function findTopTracks() {
   try {
-    var topArtists = await spotifyApi.getMyTopArtists();
-    topArtistsRefined = topArtists.body['items'];
+    let topTracks = await spotifyApi.getMyTopTracks();
+    // console.log(`${topTracks.body['items']} and also ${typeof(topTracks)}`);
+    // var topTracksRefined = topTracks['items'];
+    // console.log(topTracksRefined);
+    return topTracks;
   }
-  catch {
-    console.log("something went wrong with getting top artists :PP");
+  catch (err) {
+    console.log("something went wrong with getting top tracks :PP");
   }
 }
 
 // Find song recommendations
-async function findTracks(topArtists, genres) {
+async function findTracks(topTracks, genres) {
   try {
-    var tracks = spotifyApi.getRecommendations({
-      seed_artists: topArtists,
-      seed_genres: genres,
+    var tracksInfo = await spotifyApi.getRecommendations({ // idea !! seed artists but also customize other factors
+      seed_tracks: topTracks, // list of song IDs
+      seed_genres: genres, // list of genre names
       limit: 10
     });
-    return tracks;
-  } catch {
+    console.log('Got tracksInfo');
+    var genTracks = tracksInfo.body['tracks'];
+    console.log(`${typeof(genTracks)}`);
+    console.log(`${genTracks}`);
+    var genTracksURIs = [];
+    for (let i = 0; i < 10; i++) {
+      try {
+        genTracksURIs.push(genTracks[i].uri);
+      } catch (err) {
+        console.log('there was an error in adding trackURI :P');
+      }
+    }
+    return genTracksURIs;
+  } catch (err) {
     console.log("something went wrong with finding tracks for the playlist :PP");
   }
 }
@@ -128,7 +150,7 @@ async function createPlaylist(title, description) {
     var newPlaylist = await spotifyApi.createPlaylist(title, { 'description': description, 'public': true }, { position : 0 });
     return newPlaylist;
   }
-  catch {
+  catch (err) {
     console.log("something went wrong with creating the playlist :PP");
   }
 }
@@ -137,7 +159,7 @@ async function addToPlaylist(playlistId, tracks) {
   try {
     await spotifyApi.addTracksToPlaylist(playlistId, tracks);
     console.log('Added tracks to playlist');
-  } catch {
+  } catch (err) {
     console.log("something went wrong with adding songs to the playlist :PP");
   }
 }
