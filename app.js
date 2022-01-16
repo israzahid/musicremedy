@@ -12,7 +12,7 @@ var path = require('path');
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = "http://localhost:8888/callback";
-const scope = ["user-read-private", "user-read-email"];
+const scope = ["user-read-private", "user-read-email", "user-top-read", "playlist-modify-private"];
 const stateKey = "spotify_auth_state";
 const PORT = 8888;
 
@@ -122,11 +122,19 @@ app.get("/callback", async (req, res) => {
 // Find user's top tracks, return a list of song IDs
 async function findTopTracks() {
   try {
-    let topTracks = await spotifyApi.getMyTopTracks({ time_range: 'long_term', limit:20, offset:0 });
-    console.log(`${topTracks} and also ${typeof(topTracks)}`);
-    // var topTracksRefined = topTracks['items'];
-    // console.log(topTracksRefined);
-    return topTracks;
+    let topTracksInfo = await spotifyApi.getMyTopTracks({ time_range: 'long_term', limit:10, offset:0 });
+    var topTracks = topTracksInfo.body['items'];
+    console.log('ok here');
+    var topTracksIds = [];
+    for (let i = 0; i < 10; i++) {
+      try {
+        topTracksIds.push(topTracks[i].id);
+      } catch (err) {
+        console.log('something went wrong with adding top tracks to list :PP');
+        console.log(err);
+      }
+    }
+    return topTracksIds;
   }
   catch (err) {
     console.log("something went wrong with getting top tracks :PP");
