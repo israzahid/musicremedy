@@ -66,22 +66,22 @@ app.get("/categories", async (req, res) => {
   });
   var userId = await getUserId(); // returns userId, string
   console.log(`UserID: ${userId}`);
-  // let topTracks = await findTopTracks();
-  var topTracks = 
-      ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb']
-    ;
+  let topTracks = await findTopTracks();
+  console.log(topTracks);
+  // var topTracks = 
+  //     ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb']
+  //   ;
   var genres = [
       'indie pop', 'indie poptimism', 'easy listening'
     ];
-  var genTracks = await findTracks(topTracks, genres); 
-  var genTracksURIs = genTracks[0];
-  var genTracksInfo = genTracks[1];
-  console.log(`Generated recommended tracks`);
-  console.log(genTracksInfo);
+  // var genTracks = await findTracks(topTracks, genres); 
+  // var genTracksURIs = genTracks[0];
+  // var genTracksInfo = genTracks[1];
+  // console.log(`Generated recommended tracks`);
   // var newPlaylist = await generatePlaylist(userId, 'Pain Relief', 'Here is a therapeutic pain relief playlist');
   // console.log(newPlaylist);
-  var playlistId = '1dmCfhZzi5q4EGdqJGp4sl';
-  addToPlaylist(userId, playlistId, genTracksURIs);
+  // var playlistId = '1dmCfhZzi5q4EGdqJGp4sl';
+  // addToPlaylist(userId, playlistId, genTracksURIs);
 });
 
 app.get("/playlist", function(req, res){
@@ -122,14 +122,15 @@ app.get("/callback", async (req, res) => {
 // Find user's top tracks, return a list of song IDs
 async function findTopTracks() {
   try {
-    let topTracks = await spotifyApi.getMyTopTracks();
-    // console.log(`${topTracks.body['items']} and also ${typeof(topTracks)}`);
+    let topTracks = await spotifyApi.getMyTopTracks({ time_range: 'long_term', limit:20, offset:0 });
+    console.log(`${topTracks} and also ${typeof(topTracks)}`);
     // var topTracksRefined = topTracks['items'];
     // console.log(topTracksRefined);
     return topTracks;
   }
   catch (err) {
     console.log("something went wrong with getting top tracks :PP");
+    console.log(err);
   }
 }
 
@@ -148,7 +149,7 @@ async function findTracks(topTracks, genres) {
         genTracksURIs.push(genTracks[i].uri);
         genTracksInfo.push({ title: genTracks[i].name, artists: genTracks[i].artists, duration: genTracks[i].duration_ms});
       } catch (err) {
-        console.log('there was an error in adding trackURI :P');
+        console.log('there was an error in adding trackURI or info :P');
       }
     }
     return [genTracksURIs, genTracksInfo];
