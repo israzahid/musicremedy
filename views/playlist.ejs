@@ -8,16 +8,16 @@
     </div>
     <div id="products" class="row view-group">
       <ul class="list-group">
-        <% for (let i = 0; i < 6; i++) { %>
+        <% tracks.forEach(function(track) { %>
         <li class="list-group-item">
           <i class="fas fa-play-circle fa-3x"></i>
           <div class="song-info">
-            <span>Song title</span>
-            <p>Singer</p>
+            <span><%= track.title %></span>
+            <p><%= track.artists %></p>
           </div>
-          <span class="time align-middle">3:33</span>
+          <span class="time align-middle"><%= track.duration %></span>
         </li>
-        <% }; %>
+        <% }); %>
       </ul>
     </div>
   </div>

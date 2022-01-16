@@ -62,7 +62,7 @@ app.get("/categories", function (req, res) {
     },
   ];
   res.render("categories", {
-    categories: categories,
+    categories: categories
   });
 });
 
@@ -73,13 +73,16 @@ app.get("/playlist", async (req, res) => {
   console.log(`UserID: ${userId}`);
   // var topTracks = await findTopTracks();
   // console.log("Found user's top tracks");
+  // console.log(topTracks);
+  // console.log(typeof(topTracks));
   var topTracks = ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb'];
   var genres = [
       'indie pop', 'indie poptimism', 'easy listening'
     ];
   var genTracks = await findTracks(topTracks, genres); 
   var genTracksURIs = genTracks[0];
-  var genTracksInfo = genTracks[1];
+  var tracks = genTracks[1];
+  console.log(tracks);
   console.log(`Generated recommended tracks`);
   //////////////////////////////////////////////////////////////////////
 
@@ -88,7 +91,9 @@ app.get("/playlist", async (req, res) => {
   // var playlistId = '1dmCfhZzi5q4EGdqJGp4sl';
   // addToPlaylist(userId, playlistId, genTracksURIs);
 
-  res.render("playlist");
+  res.render("playlist", {
+    tracks: tracks
+  });
 });
 
 // Instantiate Spotify Web API
@@ -157,7 +162,7 @@ async function findTracks(topTracks, genres) {
     for (let i = 0; i < 10; i++) {
       try {
         genTracksURIs.push(genTracks[i].uri);
-        genTracksInfo.push({ title: genTracks[i].name, artists: genTracks[i].artists, duration: genTracks[i].duration_ms});
+        genTracksInfo.push({ title: genTracks[i].name, artists: genTracks[i].artists[0].name, duration: millisToMinutesAndSeconds(genTracks[i].duration_ms)});
       } catch (err) {
         console.log('there was an error in adding trackURI or info :P');
       }
@@ -166,6 +171,12 @@ async function findTracks(topTracks, genres) {
   } catch (err) {
     console.log("something went wrong with finding tracks for the playlist :PP");
   }
+}
+
+function millisToMinutesAndSeconds(millis) {
+  var minutes = Math.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 }
 
 // Create a new playlist
