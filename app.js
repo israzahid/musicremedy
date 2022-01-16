@@ -15,6 +15,8 @@ require("dotenv").config();
  var cors = require('cors');
  var querystring = require('querystring');
  var cookieParser = require('cookie-parser');
+ var bodyParser = require("body-parser");
+ var ejs = require("ejs");
  
  var client_id = process.env.CLIENT_ID; // Your client id
  var client_secret = process.env.CLIENT_SECRET; // Your secret
@@ -42,6 +44,46 @@ require("dotenv").config();
  app.use(express.static(__dirname + '/public'))
     .use(cors())
     .use(cookieParser());
+ app.set('view engine', 'ejs');
+ app.use(bodyParser.urlencoded({
+  extended: true
+ }));
+
+ app.get("/", function(req, res) {
+   res.render("home");
+ });
+
+ app.get("/categories", function(req, res) {
+  var categories = [
+    {
+      title: "Pain Relief",
+      number: 1
+    },
+    {
+      title: "Managing Depression",
+      number: 2
+    },
+    {
+      title: "Promoting Wellness",
+      number: 3
+    },
+    {
+      title: "Improving Memory",
+      number: 4
+    },
+    {
+      title: "Sleep",
+      number: 5
+    },
+    {
+      title: "Stress Management",
+      number: 6
+    },
+  ]
+  res.render("categories", {
+    categories: categories
+  });
+});
  
  app.get('/login', function(req, res) {
  
