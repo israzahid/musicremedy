@@ -8,7 +8,6 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-// var router = express.Router();
 var SpotifyWebApi = require('spotify-web-api-node');
 
 const client_id = process.env.CLIENT_ID;
@@ -56,8 +55,8 @@ app.get('/callback', async (req, res) => {
     spotifyApi.setAccessToken(access_token);
 });
 
-// /* get made for you playlists */
-// // Get a user's playlists
+/* get made for you playlists */
+
 
 
 /* find songs under made for you playlists under same genre 
@@ -81,5 +80,5 @@ var generateRandomString = function(length) {
     return text;
   };
 
-console.log(`Listening on ${PORT}`);
-app.listen(PORT);
+// console.log(`Listening on ${PORT}`);
+// app.listen(PORT);
