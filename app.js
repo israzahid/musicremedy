@@ -34,7 +34,7 @@ app.get("/", function (req, res) {
   res.render("home");
 });
 
-app.get("/categories", async (req, res) => {
+app.get("/categories", function (req, res) {
   var categories = [
     {
       title: "Pain Relief",
@@ -64,27 +64,30 @@ app.get("/categories", async (req, res) => {
   res.render("categories", {
     categories: categories,
   });
+});
+
+app.get("/playlist", async (req, res) => {
+
+  // Tested stuff that works
   var userId = await getUserId(); // returns userId, string
   console.log(`UserID: ${userId}`);
-  let topTracks = await findTopTracks();
-  console.log(topTracks);
-  // var topTracks = 
-  //     ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb']
-  //   ;
+  // var topTracks = await findTopTracks();
+  // console.log("Found user's top tracks");
+  var topTracks = ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb'];
   var genres = [
       'indie pop', 'indie poptimism', 'easy listening'
     ];
-  // var genTracks = await findTracks(topTracks, genres); 
-  // var genTracksURIs = genTracks[0];
-  // var genTracksInfo = genTracks[1];
-  // console.log(`Generated recommended tracks`);
+  var genTracks = await findTracks(topTracks, genres); 
+  var genTracksURIs = genTracks[0];
+  var genTracksInfo = genTracks[1];
+  console.log(`Generated recommended tracks`);
+  //////////////////////////////////////////////////////////////////////
+
   // var newPlaylist = await generatePlaylist(userId, 'Pain Relief', 'Here is a therapeutic pain relief playlist');
   // console.log(newPlaylist);
   // var playlistId = '1dmCfhZzi5q4EGdqJGp4sl';
   // addToPlaylist(userId, playlistId, genTracksURIs);
-});
 
-app.get("/playlist", function(req, res){
   res.render("playlist");
 });
 
@@ -122,9 +125,8 @@ app.get("/callback", async (req, res) => {
 // Find user's top tracks, return a list of song IDs
 async function findTopTracks() {
   try {
-    let topTracksInfo = await spotifyApi.getMyTopTracks({ time_range: 'long_term', limit:10, offset:0 });
+    var topTracksInfo = await spotifyApi.getMyTopTracks({ time_range: 'long_term', limit:10, offset:0 });
     var topTracks = topTracksInfo.body['items'];
-    console.log('ok here');
     var topTracksIds = [];
     for (let i = 0; i < 10; i++) {
       try {
