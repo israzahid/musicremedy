@@ -12,7 +12,7 @@ var path = require('path');
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = "http://localhost:8888/callback";
-const scope = ["user-read-private", "user-read-email"];
+const scope = ["user-read-private", "user-read-email", "user-top-read", "playlist-modify-private"];
 const stateKey = "spotify_auth_state";
 const PORT = 8888;
 
@@ -34,7 +34,7 @@ app.get("/", function (req, res) {
   res.render("home");
 });
 
-app.get("/categories", async (req, res) => {
+app.get("/categories", function (req, res) {
   var categories = [
     {
       title: "Pain Relief",
@@ -64,12 +64,16 @@ app.get("/categories", async (req, res) => {
   res.render("categories", {
     categories: categories,
   });
+});
+
+app.get("/playlist", async (req, res) => {
+
+  // Tested stuff that works
   var userId = await getUserId(); // returns userId, string
   console.log(`UserID: ${userId}`);
-  // let topTracks = await findTopTracks();
-  var topTracks = 
-      ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb']
-    ;
+  // var topTracks = await findTopTracks();
+  // console.log("Found user's top tracks");
+  var topTracks = ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb'];
   var genres = [
       'indie pop', 'indie poptimism', 'easy listening'
     ];
@@ -77,14 +81,13 @@ app.get("/categories", async (req, res) => {
   var genTracksURIs = genTracks[0];
   var genTracksInfo = genTracks[1];
   console.log(`Generated recommended tracks`);
-  console.log(genTracksInfo);
+  //////////////////////////////////////////////////////////////////////
+
   // var newPlaylist = await generatePlaylist(userId, 'Pain Relief', 'Here is a therapeutic pain relief playlist');
   // console.log(newPlaylist);
-  var playlistId = '1dmCfhZzi5q4EGdqJGp4sl';
-  addToPlaylist(userId, playlistId, genTracksURIs);
-});
+  // var playlistId = '1dmCfhZzi5q4EGdqJGp4sl';
+  // addToPlaylist(userId, playlistId, genTracksURIs);
 
-app.get("/playlist", function(req, res){
   res.render("playlist");
 });
 
@@ -122,14 +125,22 @@ app.get("/callback", async (req, res) => {
 // Find user's top tracks, return a list of song IDs
 async function findTopTracks() {
   try {
-    let topTracks = await spotifyApi.getMyTopTracks();
-    // console.log(`${topTracks.body['items']} and also ${typeof(topTracks)}`);
-    // var topTracksRefined = topTracks['items'];
-    // console.log(topTracksRefined);
-    return topTracks;
+    var topTracksInfo = await spotifyApi.getMyTopTracks({ time_range: 'long_term', limit:10, offset:0 });
+    var topTracks = topTracksInfo.body['items'];
+    var topTracksIds = [];
+    for (let i = 0; i < 10; i++) {
+      try {
+        topTracksIds.push(topTracks[i].id);
+      } catch (err) {
+        console.log('something went wrong with adding top tracks to list :PP');
+        console.log(err);
+      }
+    }
+    return topTracksIds;
   }
   catch (err) {
     console.log("something went wrong with getting top tracks :PP");
+    console.log(err);
   }
 }
 
@@ -148,7 +159,7 @@ async function findTracks(topTracks, genres) {
         genTracksURIs.push(genTracks[i].uri);
         genTracksInfo.push({ title: genTracks[i].name, artists: genTracks[i].artists, duration: genTracks[i].duration_ms});
       } catch (err) {
-        console.log('there was an error in adding trackURI :P');
+        console.log('there was an error in adding trackURI or info :P');
       }
     }
     return [genTracksURIs, genTracksInfo];
