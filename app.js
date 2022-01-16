@@ -6,6 +6,8 @@ var cookieParser = require("cookie-parser");
 var SpotifyWebApi = require("spotify-web-api-node");
 var bodyParser = require("body-parser");
 var ejs = require("ejs");
+var favicon = require('serve-favicon');
+var path = require('path');
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
@@ -23,8 +25,9 @@ app
   .use(
     bodyParser.urlencoded({
       extended: true,
-    })
-  );
+    }))
+  .use(favicon(path.join(__dirname, 'public', 'images/favicon.ico')))
+  .use('/public/images', express.static(__dirname + '/public/images'));
 app.set("view engine", "ejs");
 
 app.get("/", function (req, res) {
@@ -61,6 +64,10 @@ app.get("/categories", function (req, res) {
   res.render("categories", {
     categories: categories,
   });
+});
+
+app.get("/playlist", function(req, res){
+  res.render("playlist");
 });
 
 // Instantiate Spotify Web API
