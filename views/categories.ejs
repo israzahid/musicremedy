@@ -1,21 +1,21 @@
 <%- include('partials/header') %>
 <div class="category-body">
-    <div class="container categories">
-        <h2>What would you like to focus on Today?</h2>
-        <div class="row">
-            <% categories.forEach(function(category){ %>
-                <div class="item col-xs-4 col-lg-4">
-                    <div class="card category-<%= category.number %>">
-                        <div class="caption card-body">
-                            <h4 class="group card-title inner list-group-item-heading">
-                                <%= category.title %>
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-            <% }); %> 
+  <div class="container categories">
+    <h2>What would you like to focus on Today?</h2>
+    <div class="row">
+      <% categories.forEach(function(category){ %>
+      <div class="item col-xs-4 col-lg-4">
+        <div class="card category-<%= category.number %>">
+          <div class="caption card-body">
+            <h4 class="group card-title inner list-group-item-heading">
+              <%= category.title %>
+            </h4>
+          </div>
         </div>
+      </div>
+      <% }); %>
     </div>
+  </div>
 </div>
 
 <%- include('partials/footer') %>

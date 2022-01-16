@@ -1,110 +1,111 @@
-html, body {
-    width: 100vw;
-    min-height: 100vh;
+html,
+body {
+  width: 100vw;
+  min-height: 100vh;
 }
 
 .home-body {
-    background: linear-gradient(#CDF6FF, #E8D3F8) fixed; 
-    width: 100vw;
-    min-height: 100vh;
+  background: linear-gradient(#cdf6ff, #e8d3f8) fixed;
+  width: 100vw;
+  min-height: 100vh;
 }
 
 .centered {
-    padding-top: 150px;
-    text-align: center;
+  padding-top: 150px;
+  text-align: center;
 }
 
 .dot {
-    width: 184px;
-    height: 184px;
-    margin: auto;
-    margin-bottom: 25px;
-    background-color: #878686;
-    border-radius: 50%;
-    display: block;
+  width: 184px;
+  height: 184px;
+  margin: auto;
+  margin-bottom: 25px;
+  background-color: #878686;
+  border-radius: 50%;
+  display: block;
 }
 
 .display-4 {
-    font-family: 'Roboto', sans-serif;
-    color: #5E34A3;
+  font-family: "Roboto", sans-serif;
+  color: #5e34a3;
 }
 
 .btn-success {
-    font-family: 'Manrope', sans-serif;
-    font-weight: 700;
-    padding-top: 2%;
-    padding-bottom: 2%;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  padding-top: 2%;
+  padding-bottom: 2%;
 }
 
 /* CATEGORIES */
 
 .category-body {
-    background-color: #EEFCFF;
-    width: 100vw;
-    min-height: 100vh;
+  background-color: #eefcff;
+  width: 100vw;
+  min-height: 100vh;
 }
 
 .categories {
-    padding-top: 100px;
+  padding-top: 100px;
 }
 
 .categories h2 {
-    padding-bottom: 25px;
-    font-family: 'Manrope', sans-serif;
-    font-weight: 700;
-    color: #3A3393;
+  padding-bottom: 25px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  color: #3a3393;
 }
 
 .item {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 .card {
-    height: 215px;
-    width: 289px;
-    margin: auto;
-    border-radius: 10px;
+  height: 215px;
+  width: 289px;
+  margin: auto;
+  border-radius: 10px;
 }
 
 .card-body {
-    display: flex;
-    text-align: left;
+  display: flex;
+  text-align: left;
 }
 
 .card-title {
-    font-family: 'Manrope', sans-serif;
-    font-weight: 800;
-    font-size: 36px;
-    margin-left: 5%;
-    margin-right: 5%;
-    align-self: center;
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  margin-left: 5%;
+  margin-right: 5%;
+  align-self: center;
 }
 
 .category-1 {
-    color: #3A3393;
-    background-color: #E8D3F8;
+  color: #3a3393;
+  background-color: #e8d3f8;
 }
 
 .category-2 {
-    color: #E14574;
-    background-color: #FFF3C9;
+  color: #e14574;
+  background-color: #fff3c9;
 }
 
 .category-3 {
-    color: #533DDB;
-    background-color: #AAFAE6;
+  color: #533ddb;
+  background-color: #aafae6;
 }
 
 .category-4 {
-    color: #ED5616;
-    background-color: #C5F2A9;
+  color: #ed5616;
+  background-color: #c5f2a9;
 }
 
 .category-5 {
-    color: #FFE485;
-    background-color: #45439D;
+  color: #ffe485;
+  background-color: #45439d;
 }
 
 .category-6 {
-    color: #E96060;
-    background-color: #9ECEFB;
+  color: #e96060;
+  background-color: #9ecefb;
 }
