@@ -61,7 +61,8 @@ app.get("/categories", async (req, res) => {
   res.render("categories", {
     categories: categories,
   });
-  // var userId = await getUserId(); // returns userId, string
+  var userId = await getUserId(); // returns userId, string
+  console.log(`UserID: ${userId}`);
   // let topTracks = await findTopTracks();
   var topTracks = 
       ['5iFwAOB2TFkPJk8sMlxP8g', '5z8qQvLYEehH19vNOoFAPb']
@@ -70,7 +71,14 @@ app.get("/categories", async (req, res) => {
       'indie pop', 'indie poptimism', 'easy listening'
     ];
   var genTracks = await findTracks(topTracks, genres); 
-  console.log(genTracks);
+  var genTracksURIs = genTracks[0];
+  var genTracksInfo = genTracks[1];
+  console.log(`Generated recommended tracks`);
+  console.log(genTracksInfo);
+  // var newPlaylist = await generatePlaylist(userId, 'Pain Relief', 'Here is a therapeutic pain relief playlist');
+  // console.log(newPlaylist);
+  var playlistId = '1dmCfhZzi5q4EGdqJGp4sl';
+  addToPlaylist(userId, playlistId, genTracksURIs);
 });
 
 // Instantiate Spotify Web API
@@ -126,28 +134,27 @@ async function findTracks(topTracks, genres) {
       seed_genres: genres, // list of genre names
       limit: 10
     });
-    console.log('Got tracksInfo');
     var genTracks = tracksInfo.body['tracks'];
-    console.log(`${typeof(genTracks)}`);
-    console.log(`${genTracks}`);
-    var genTracksURIs = [];
+    var genTracksURIs = [], genTracksInfo = [];
     for (let i = 0; i < 10; i++) {
       try {
         genTracksURIs.push(genTracks[i].uri);
+        genTracksInfo.push({ title: genTracks[i].name, artists: genTracks[i].artists, duration: genTracks[i].duration_ms});
       } catch (err) {
         console.log('there was an error in adding trackURI :P');
       }
     }
-    return genTracksURIs;
+    return [genTracksURIs, genTracksInfo];
   } catch (err) {
     console.log("something went wrong with finding tracks for the playlist :PP");
   }
 }
 
 // Create a new playlist
-async function createPlaylist(title, description) {
+async function generatePlaylist(userId, title, description) {
   try {
-    var newPlaylist = await spotifyApi.createPlaylist(title, { 'description': description, 'public': true }, { position : 0 });
+    console.log('creating new playlist');
+    var newPlaylist = await spotifyApi.createPlaylist(userId, title, { public: false });
     return newPlaylist;
   }
   catch (err) {
@@ -155,9 +162,9 @@ async function createPlaylist(title, description) {
   }
 }
 
-async function addToPlaylist(playlistId, tracks) {
+async function addToPlaylist(userId, playlistId, tracks) {
   try {
-    await spotifyApi.addTracksToPlaylist(playlistId, tracks);
+    await spotifyApi.addTracksToPlaylist(userId, playlistId, tracks);
     console.log('Added tracks to playlist');
   } catch (err) {
     console.log("something went wrong with adding songs to the playlist :PP");
